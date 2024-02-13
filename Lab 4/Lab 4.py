@@ -43,7 +43,10 @@ print(data.describe())
 print('Missing Values:')
 print(data.isna().sum())
 
-# Encode 'gender' column with Male and Female value to numeric value for ML algorithm
+# Fill 'Male' or 'Female' value randomly for 'gender' column if the value is missing
+data['gender'] = data['gender'].fillna(pd.Series(np.random.choice(['Male', 'Female'], size=len(data.index))))
+
+# Encode 'gender' column with Male and Female value to numeric value 0 and 1 for ML algorithm
 from sklearn import preprocessing
 encoder = preprocessing.LabelEncoder()
 data['gender'] = encoder.fit_transform(data['gender'])
@@ -60,7 +63,6 @@ imputer = KNNImputer()
 filledData = imputer.fit_transform(data)
 
 # Formating the data to look like it was initially
-id_col = list(range(1, 1001))
 cols = ['gender', 'age', 'income', 'tax (15%)']
 finalData = pd.DataFrame(data = filledData, columns = cols)
 print(finalData.describe())
